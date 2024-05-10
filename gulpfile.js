@@ -13,7 +13,7 @@ const size = require('gulp-size');
 const newer = require('gulp-newer');
 const browsersync = require('browser-sync').create();
 const autoprefixer = require('gulp-autoprefixer');
-const sass = require('sass');
+const sass = require('gulp-sass')(require('sass'));
 
 const paths= {
   html: {
@@ -23,14 +23,15 @@ const paths= {
   styles:{
     src: 'src/styles/**/*.less',
     dest: 'dist/css',
-    dest2: 'src/styles/css'
+    dest2: 'src/styles/css',
+    sass : 'src/styles/*.{scss,sass}'
   },
   scripts:{
     src: 'src/scripts/**/*.js',
     dest: 'dist/js'
   },
   images:{
-    src: 'src/img/*',
+    src: 'src/img/**/*',
     dest: 'dist/img'
   }
 }
@@ -49,10 +50,12 @@ function html() {
 
 //Задача для обработки изображений
 function img() {
-  return gulp.src(paths.images.src)
+  return gulp.src(paths.images.src, { encoding: false })
     .pipe(newer(paths.images.dest))
+    // .pipe(imagemin())
     .pipe(imagemin({ 
-      progressive: true
+      progressive: true,
+      quality: 75
     }))
     .pipe(size({
       showFiles: true,
@@ -64,7 +67,7 @@ function img() {
 function clean() {
   return del(['dist/*', '!dist/img'])
 }
-//Задача для обработки стилец
+//Задача для обработки less-стилей
 function styles() {
   return gulp.src(paths.styles.src)
   .pipe(sourcemaps.init())
@@ -76,8 +79,8 @@ function styles() {
     level: 2
   }))
   .pipe(rename({
-    basename: 'main',
-    suffix: '.min'
+    // basename: 'main',
+    suffix: '.main.min'
   }))
   .pipe(sourcemaps.write('.'))
   .pipe(size({
@@ -87,12 +90,29 @@ function styles() {
   .pipe(gulp.dest(paths.styles.dest))
   .pipe(browsersync.stream())
 }
-
+function styleSass (){
+  // console.log(paths.styles.sass)
+  // const result = sass.compile('src/styles/main-style3.scss')
+  // console.log(result.css);
+  return gulp.src(paths.styles.sass)
+    .pipe(sourcemaps.init())
+    .pipe(sass().on('error', sass.logError))
+    // // минимизация css
+    // .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
+    .pipe(autoprefixer({
+      cascade: false
+    }))
+    // .pipe(rename({
+    //   // basename: 'sass',
+    //   suffix: '-sass.min'
+    // }))
+    .pipe(sourcemaps.write('.'))
+  .pipe(gulp.dest(paths.styles.dest))
+}
 function styles2() {
   return gulp.src(paths.styles.src)
   .pipe(less())
   .pipe(gulp.dest(paths.styles.dest2))
-
 }
 
 //Задача для обработки скриптов
@@ -120,9 +140,11 @@ function watch() {
       baseDir: "./dist/"
     }
   });
-  gulp.watch(paths.styles.src, styles)
+  // gulp.watch(paths.styles.src, styles)
   gulp.watch(paths.scripts.src, scripts)
-  gulp.watch(paths.styles.src, styles2)
+  // gulp.watch(paths.styles.src, styles2)
+  gulp.watch(paths.styles.src, gulp.parallel(styles, styles2))
+  gulp.watch(paths.styles.sass, styleSass)
   gulp.watch(paths.html.src, html)
   gulp.watch(paths.images.src, img)
   //Синхронизация с браузером
@@ -133,7 +155,8 @@ function watch() {
 }
 
 
-const build = gulp.series(clean, html, gulp.parallel(styles, styles2, scripts, img), watch)
+// const build = gulp.series(clean, html, gulp.parallel(styles, styles2, scripts), watch)
+const build = gulp.series(clean, html, gulp.parallel(styles, styles2, styleSass, scripts, img), watch)
 
 exports.html =  html
 exports.clean = clean
@@ -144,3 +167,4 @@ exports.watch = watch
 exports.scripts= scripts
 exports.build = build
 exports.default = build
+exports.styleSass = styleSass

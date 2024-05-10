@@ -43,7 +43,7 @@ body {
         }
           .item-sub.active::before{
             content:'';
-            background: url(/img/menu_sub.svg) no-repeat;
+            background: url(../img/menu_sub.svg) no-repeat;
             position: absolute;
             width: 24px;
             height: 24px;
@@ -327,7 +327,7 @@ body {
 
                 input[type=range].styled-slider {
                   height: 10px;
-                  -webkit-appearance: none;
+                  --webkit-appearance: none;
                   width: 100%;
                 }
         
@@ -344,7 +344,7 @@ body {
         
                 /*webkit*/
                 input[type=range].styled-slider::-webkit-slider-thumb {
-                  -webkit-appearance: none;
+                  --webkit-appearance: none;
                   width: 33px;
                   height: 33px;
                   border-radius: 50px;
@@ -383,6 +383,7 @@ body {
                   border-radius: 4px;
                   background: #BAF1FF;
                   box-shadow: none;
+                  opacity: 0.111;
                 }
         
                 input[type=range].styled-slider.slider-progress::-moz-range-track {

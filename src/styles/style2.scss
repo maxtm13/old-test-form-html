@@ -1,0 +1,15 @@
+$main_color: #a55a55;
+.content {
+    font-size: 24px;
+    &_text {
+        color: $main_color;
+        display: flex;
+        justify-content: start;
+    }
+}
+::placeholder {
+    color: gray;
+    opacity: 0.8;
+    display: flex;
+    justify-content: start;
+}

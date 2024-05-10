@@ -43,7 +43,7 @@ body .header .menu__items .item {
 }
 body .header .menu__items .item-sub.active::before {
   content: '';
-  background: url(/img/menu_sub.svg) no-repeat;
+  background: url(../img/menu_sub.svg) no-repeat;
   position: absolute;
   width: 24px;
   height: 24px;
@@ -299,7 +299,7 @@ body .form button {
 }
 body .form input[type=range].styled-slider {
   height: 10px;
-  -webkit-appearance: none;
+  --webkit-appearance: none;
   width: 100%;
 }
 body .form input[type=range].styled-slider.slider-progress {
@@ -311,7 +311,7 @@ body .form input[type=range].styled-slider:focus {
   outline: none;
 }
 body .form input[type=range].styled-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
+  --webkit-appearance: none;
   width: 33px;
   height: 33px;
   border-radius: 50px;
@@ -344,6 +344,7 @@ body .form input[type=range].styled-slider::-moz-range-track {
   border-radius: 4px;
   background: #BAF1FF;
   box-shadow: none;
+  opacity: 0.111;
 }
 body .form input[type=range].styled-slider.slider-progress::-moz-range-track {
   background: linear-gradient(#BE69D5, #BE69D5) 0/var(--sx) 100% no-repeat, #BAF1FF;
